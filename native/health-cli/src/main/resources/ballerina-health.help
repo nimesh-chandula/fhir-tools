@@ -106,6 +106,15 @@ COMMANDS
                         list of FHIR resources to include in the aggregated service. If not specified,
                         all available resources will be included. Example: Patient,Observation,Encounter
 
+                    --minimal
+                        Only applicable in 'template' mode. Enable minimal generation mode to generate
+                        only the core service files without additional Choreo-specific files. When enabled,
+                        skips generation of .choreo folder, OAS definition files, .gitignore, and
+                        Ballerina.toml. Also generates files directly without the 'fhir-service'
+                        subfolder in aggregate mode.
+
+                    -c, --config <config-file-path>
+
                     -c, --config <config-file-path>
                     	This is a MANDATORY input applicable in ‘connector’ mode. Provide the path
                     	for the configuration json file containing the necessary parameters to run the
