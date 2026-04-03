@@ -375,7 +375,14 @@ def _check_bal_at_startup() -> None:
     try:
         bal = find_bal_executable()
         if not bal:
-            print("[WARN] Ballerina CLI not found on PATH. Tools will fail until installed.", flush=True)
+            log_event(
+                event_type="startup",
+                tool_name="server",
+                request_id="startup",
+                caller=get_caller_identity(),
+                payload={"warning": "Ballerina CLI not found on PATH. Tools will fail until installed."},
+                status="warn",
+            )
             return
         result = subprocess.run(
             [bal, "version"], capture_output=True, text=True, timeout=10
