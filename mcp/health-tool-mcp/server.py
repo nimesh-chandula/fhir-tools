@@ -222,7 +222,8 @@ def format_tool_output(
     output_location: str,
     artifact_name: str = "",
     working_directory: Optional[str] = None,
-    was_overwritten: bool = False
+    was_overwritten: bool = False,
+    run_start_time: Optional[float] = None
 ) -> str:
     """Format consistent JSON output for all generation tools."""
 
@@ -240,14 +241,24 @@ def format_tool_output(
         )
 
     # Collect generated files
+    # Only count files created/modified during this run to avoid
+    # pre-existing files masking actual failures
     generated_files: list[str] = []
     try:
         for root, dirs, files in os.walk(output_location):
             # Skip unwanted directories (in-place modification of dirs list)
             dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
-            
+
             for file in files:
                 full_path = os.path.join(root, file)
+                # If we know when the run started, only include files
+                # that were created or modified during this execution
+                if run_start_time is not None:
+                    try:
+                        if os.path.getmtime(full_path) < run_start_time:
+                            continue
+                    except OSError:
+                        continue
                 relative_path = os.path.relpath(full_path, output_location)
                 generated_files.append(relative_path.replace("\\", "/"))
     except Exception:
@@ -630,7 +641,8 @@ def fhirPackageGeneration(
             stderr=result.stderr,
             output_location=output_location,
             artifact_name=f"Ballerina package '{package_name}'",
-            working_directory=working_directory
+            working_directory=working_directory,
+            run_start_time=_start_time
         )
         return _log_output_and_return(
             tool_name="fhirPackageGeneration",
@@ -969,6 +981,7 @@ def fhirTemplateGeneration(
             artifact_name="FHIR API templates",
             working_directory=working_directory,
             was_overwritten=was_overwritten,
+            run_start_time=_start_time,
         )
         return _log_output_and_return(
             tool_name="fhirTemplateGeneration",
@@ -1209,7 +1222,8 @@ def cdsTemplateGeneration(
             stderr=result.stderr,
             output_location=output_location,
             artifact_name="CDS service template",
-            working_directory=working_directory
+            working_directory=working_directory,
+            run_start_time=_start_time
         )
         return _log_output_and_return(
             tool_name="cdsTemplateGeneration",
