@@ -107,11 +107,9 @@ COMMANDS
                         all available resources will be included. Example: Patient,Observation,Encounter
 
                     --minimal
-                        Only applicable in 'template' mode. Enable minimal generation mode to generate
-                        only the core service files without additional Choreo-specific files. When enabled,
-                        skips generation of .choreo folder, OAS definition files, .gitignore, and
-                        Ballerina.toml. Also generates files directly without the 'fhir-service'
-                        subfolder in aggregate mode.
+                        Only applicable in 'template' mode. This flag is intended only to be used by
+                        the Health Tool MCP to generate only the core service files without
+                        additional metadata or project structure files.
 
                     -c, --config <config-file-path>
 
