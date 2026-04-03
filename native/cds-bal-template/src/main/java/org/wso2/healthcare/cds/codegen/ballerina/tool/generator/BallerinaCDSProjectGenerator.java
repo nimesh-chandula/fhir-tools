@@ -70,19 +70,19 @@ public class BallerinaCDSProjectGenerator extends AbstractFHIRTemplateGenerator 
         } else {
             // Generate in subfolder (existing behavior)
             packagePath = this.getTargetDir() + ballerinaCDSProjectToolConfig.getMetadataConfig().getNamePrefix() + File.separator;
+        }
 
-            // Provide option to check and overwrite the existing package
-            Console console = System.console();
-            if (console != null && Files.exists(Paths.get(packagePath))) {
-                String input = console.readLine(CMD_MESSAGE_OVERRIDE_OUTPUT_DIRECTORY);
-                if (NO.equalsIgnoreCase(input)) {
-                    System.exit(ZERO);
-                } else if (YES.equalsIgnoreCase(input)) {
-                    System.out.println(BallerinaCDSProjectConstants.PrintStrings.OVERWRITING_EXISTING_TEMPLATES);
-                } else {
-                    System.out.println(BallerinaCDSProjectConstants.PrintStrings.INVALID_INPUT);
-                    System.exit(ZERO);
-                }
+        // Provide option to check and overwrite the existing package
+        Console console = System.console();
+        if (console != null && Files.exists(Paths.get(packagePath))) {
+            String input = console.readLine(CMD_MESSAGE_OVERRIDE_OUTPUT_DIRECTORY);
+            if (NO.equalsIgnoreCase(input)) {
+                System.exit(ZERO);
+            } else if (YES.equalsIgnoreCase(input)) {
+                System.out.println(BallerinaCDSProjectConstants.PrintStrings.OVERWRITING_EXISTING_TEMPLATES);
+            } else {
+                System.out.println(BallerinaCDSProjectConstants.PrintStrings.INVALID_INPUT);
+                System.exit(ZERO);
             }
         }
 
